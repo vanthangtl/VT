@@ -49,7 +49,7 @@ const data = {
     },
     {
       title: "Tài khoản",
-      url: "/account",
+      url: "/accounts",
       icon: <UserCircleIcon />,
     },
     {
@@ -72,7 +72,7 @@ export function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar> & { user: UserProps }) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar  collapsible="icon" {...props}>
       <SidebarHeader>
         <NavHeader />
       </SidebarHeader>
