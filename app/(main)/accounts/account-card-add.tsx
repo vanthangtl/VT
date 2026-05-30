@@ -1,8 +1,8 @@
-// account-card-add.tsx
+// app/(main)/account/account-card-add.tsx
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/utils/supabase/client"; // Import Supabase client bạn đã tạo ở Bước 2
+import { createClient } from "@/utils/supabase/client";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +23,13 @@ import {
 } from "@/components/ui/select";
 import { Landmark, Banknote, Wallet, Plus } from "lucide-react";
 
-export function AccountCardAdd({ onAdded }: { onAdded: () => void }) {
+export function AccountCardAdd({
+  userId,
+  onAdded,
+}: {
+  userId: string;
+  onAdded: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -36,34 +42,35 @@ export function AccountCardAdd({ onAdded }: { onAdded: () => void }) {
   });
 
   const handleAdd = async () => {
-    // Kiểm tra sơ bộ
     if (
       !formData.bank_name ||
       !formData.account_name ||
       !formData.account_number
     ) {
-      alert("Vui lòng nhập đầy đủ thông tin");
+      alert("Vui lòng nhập đầy đủ thông tin bắt buộc");
       return;
     }
 
     setLoading(true);
-    const { error } = await createClient().from("accounts").insert([
+    const supabase = createClient();
+
+    const { error } = await supabase.from("accounts").insert([
       {
         bank_name: formData.bank_name,
-        account_name: formData.account_name,
+        account_name: formData.account_name.toUpperCase(),
         account_number: formData.account_number,
         balance: Number(formData.balance) || 0,
         icon: formData.icon,
+        user_id: userId, // Dùng ID được truyền từ Server Component an toàn
       },
     ]);
 
     setLoading(false);
 
     if (error) {
-      console.error("Lỗi:", error);
-      alert("Không thể thêm tài khoản");
+      console.error("Lỗi thêm tài khoản:", error);
+      alert("Không thể thêm tài khoản mới!");
     } else {
-      // Reset form và đóng dialog
       setFormData({
         bank_name: "",
         account_name: "",
@@ -72,17 +79,16 @@ export function AccountCardAdd({ onAdded }: { onAdded: () => void }) {
         icon: "landmark",
       });
       setOpen(false);
-      onAdded(); // Gọi callback để load lại danh sách ở trang chủ
+      onAdded();
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {/* Nút trigger được thiết kế như một cái khung trống hoặc nút bấm nổi bật */}
-        <Button variant="outline">
-          <Plus className="h-6 w-6 text-primary" />
-          <span className="text-primary">Thêm tài khoản mới</span>
+        <Button className="flex items-center gap-2">
+          <Plus className="h-4 w-4" />
+          <span>Thêm tài khoản</span>
         </Button>
       </DialogTrigger>
 

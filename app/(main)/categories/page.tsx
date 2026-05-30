@@ -1,7 +1,21 @@
-export default function CategoriesPage() {
+// page.tsx
+// 1. Đổi đường dẫn import sang file server
+import { createClient } from "@/utils/supabase/server";
+import { TableCategories } from "./table-category";
+
+export default async function CategoriesPage() {
+  // 2. Thêm await ở đây
+  const supabase = await createClient();
+
+  // Fetch dữ liệu từ Supabase
+  const { data: categories } = await supabase
+    .from("categories")
+    .select("*")
+    .order("created_at", { ascending: false });
+
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Quản lý Danh mục</h1>
+      <TableCategories categories={categories || []} />
     </div>
   );
 }

@@ -42,7 +42,6 @@ export function AccountCardEdit({
     icon: "landmark",
   });
 
-  // Cập nhật formData mỗi khi chọn một account khác
   useEffect(() => {
     if (account) {
       setFormData({
@@ -59,13 +58,14 @@ export function AccountCardEdit({
     if (!account) return;
     setLoading(true);
 
-    const { error } = await createClient()
+    const supabase = createClient();
+    const { error } = await supabase
       .from("accounts")
       .update({
         bank_name: formData.bank_name,
-        account_name: formData.account_name,
+        account_name: formData.account_name.toUpperCase(),
         account_number: formData.account_number,
-        balance: Number(formData.balance),
+        balance: Number(formData.balance) || 0,
         icon: formData.icon,
       })
       .eq("id", account.id);
@@ -102,7 +102,7 @@ export function AccountCardEdit({
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right">Tên TK</Label>
             <Input
-              className="col-span-3"
+              className="col-span-3 uppercase"
               value={formData.account_name}
               onChange={(e) =>
                 setFormData({ ...formData, account_name: e.target.value })

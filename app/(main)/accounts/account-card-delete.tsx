@@ -1,4 +1,6 @@
-// account-card-delete.tsx
+// app/(main)/account/account-card-delete.tsx
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -21,20 +23,21 @@ export function AccountCardDelete({
 }) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Xóa tài khoản</DialogTitle>
+          <DialogDescription>
+            Bạn có chắc chắn muốn xóa tài khoản này? Toàn bộ dữ liệu liên quan
+            sẽ mất và hành động này{" "}
+            <strong className="text-destructive">không thể hoàn tác</strong>.
+          </DialogDescription>
         </DialogHeader>
-        <DialogDescription>
-          Bạn có chắc chắn muốn xóa tài khoản này? Hành động này không thể hoàn
-          tác.
-        </DialogDescription>
-        <DialogFooter>
+        <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="outline" onClick={onClose}>
             Huỷ
           </Button>
           <Button variant="destructive" onClick={onConfirm}>
-            <Trash2 className="mr-2 h-4 w-4" /> Xóa
+            <Trash2 className="mr-2 h-4 w-4" /> Xóa tài khoản
           </Button>
         </DialogFooter>
       </DialogContent>

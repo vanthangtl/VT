@@ -15,7 +15,7 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await createClient(); // ✅ Thêm await ở đây
 
   const {
     data: { user },
